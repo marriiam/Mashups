@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+
+
+		<!-- Libraries needed (NYT API and JQUERY) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+		<script>
+
+			//using key to access the selected API (NYTimes Books)
+			var url = "https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json";
+			url += '?' + $.param({
+				'api-key': "UAN6KJprjjbGUocoHTG0xeAcDGZ0PjNS",
+				'p' : "Sacramento"
+			});
+
+
+			//dispBook function displays the title, author, description, and cover of the book
+			function dispBook() {
+				$.ajax({
+					url: url,
+					method: 'GET',
+				}).done(function(result) {
+					
+					console.log(result); //logs results in inspector panel 
+						var x = Math.floor((Math.random() * result.results.books.length)); //choose a random number from the total number of books in the list  
+						document.getElementById("title").innerHTML= result.results.books[x].title;	//display title of the book between the div with ID title
+						document.getElementById("author").innerHTML= result.results.books[x].author;   //display author of the book between the div with ID author
+						document.getElementById("description").innerHTML= result.results.books[x].description;   //display description of the book between the div with ID description
+						document.getElementById("button").innerHTML= "PICK ANOTHER"; //change the button text to PICK ANOTHER once clicked 
+						console.log(result.results.books[x].title);
+
+
+						//display image with the same index x
+						var src = document.getElementById("picture");
+						src.src = result.results.books[x].book_image;
+
+					//fail safe function in case the function doesn't run 	
+				}).fail(function(err) {
+					throw err;
+				});
+				}
+
+
+		</script>
+
+
+	</head>
+
+
+
+	<body bgcolor="#89cff0">
+
+		<br>
+		<br>
+
+		<!-- title -->
+		<div>
+			<h1><center><em><font face="Impact">WHAT SHOULD I READ NEXT?</font></em></center></h1>
+		</div>
+
+		<!-- button to get info from API -->
+		<div align="center">
+			<button onclick="dispBook()" id="button">PICK A BOOK</button>
+		</div>
+
+		<!-- information from API -->
+		<div style="height:400">
+
+			<font face="Palatino">
+			<h2 id="title" align="center"></h2>
+			<h2 id="author" align="center"></h2>
+			<br>
+			<h3 id="description" align="center"></h3>
+			<br>
+			</font>
+
+			<div align="center">
+				<img id="picture" height="40%" width="40%"></img>
+			</div>
+
+			<br>
+			<br>
+
+			
+		</div>
+
+
+	</body>
+
+</html>
