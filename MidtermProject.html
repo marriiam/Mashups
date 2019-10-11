@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+
+
+		<!-- Libraries needed (NYT API and JQUERY) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+		<script>
+
+			//using key to access the selected API (NYTimes Books)
+			var url1 = "https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json";
+			url1 += '?' + $.param({
+				'api-key': "UAN6KJprjjbGUocoHTG0xeAcDGZ0PjNS",
+				'p' : "Sacramento"
+			});
+
+			//using key to access the selected API (NYTimes Top Stories)
+			var url2 = "https://api.nytimes.com/svc/topstories/v2/science.json";
+			url2 += '?' + $.param({
+				'api-key': "UAN6KJprjjbGUocoHTG0xeAcDGZ0PjNS",
+				'p' : "Sacramento"
+			});
+
+
+
+			//dispBook function displays the title, author, rank number, description, ISBN number, and cover of the book selected from the list of books
+			function dispBook() {
+				$.ajax({
+					url: url1,
+					method: 'GET',
+				}).done(function(result) {
+					
+					console.log(result); //logs results in inspector panel 
+						var x = Math.floor((Math.random() * result.results.books.length)); //choose a random number from the total number of books in the list  
+						
+						document.getElementById("a").innerHTML= result.results.books[x].title;	//display title of the book between the div with ID a
+
+						document.getElementById("b").innerHTML= result.results.books[x].contributor;	//display author of the book between the div with ID b
+						
+						document.getElementById("c").innerHTML= result.results.books[x].rank;  //display rank number of the book between the div with ID c
+						
+						document.getElementById("d").innerHTML= result.results.books[x].description;   //display description of the book between the div with ID d
+
+						document.getElementById("e").innerHTML= result.results.books[x].primary_isbn13;   //display ISBN number of the book between the div with ID e
+						
+						document.getElementById("button1").innerHTML= "PICK ANOTHER BOOK"; //change the button text to PICK ANOTHER BOOK once clicked 
+						console.log(result.results.books[x].title);
+
+
+						//display book cover image with the same index x
+						var src = document.getElementById("picture");
+						src.src = result.results.books[x].book_image;
+
+					//fail safe function in case the function doesn't run 	
+				}).fail(function(err) {
+					throw err;
+				});
+				}
+
+
+			//dispTop function displays the title, author, gentre section, abstract, url link, and an image featured in the story selected from top stories
+			function dispTop() {
+				$.ajax({
+					url: url2,
+					method: 'GET',
+				}).done(function(result) {
+
+
+					
+					console.log(result); //logs results in inspector panel 
+						var y = Math.floor((Math.random() * result.results.length)); //choose a random number from the total number of top stories in the list  
+						var z = Math.floor((Math.random() * result.results[y].multimedia.length));  // choose a random number from the total number of images provided under multimedia from the list 
+						
+						document.getElementById("a").innerHTML= result.results[y].title;  //display title of the selected story between the div with ID a
+						
+						document.getElementById("b").innerHTML= result.results[y].byline;   //display author of the selected story between the div with ID b
+
+						document.getElementById("c").innerHTML= result.results[y].section;  //display story genre section of the selected story between the div with ID c
+						
+						document.getElementById("d").innerHTML= result.results[y].abstract;  //display short abstract of the selected story between the div with ID d
+						
+						document.getElementById("e").innerHTML= result.results[y].url;  //display url link of the selected story between the div with ID e
+
+						document.getElementById("button2").innerHTML= "PICK ANOTHER STORY"; //change the button text to PICK ANOTHER STORY once clicked 
+						console.log(result.results[y].title);
+						
+						//display image with the same index y and index z
+						var src = document.getElementById("picture");
+						src.src = result.results[y].multimedia[z].url;
+
+						//fail safe function in case the function doesn't run 	
+				}).fail(function(err) {
+					throw err;
+				});
+				}
+
+		</script>
+	</head>
+	<body bgcolor="#ffffe3">
+		<br>
+		<br>
+		<!-- title -->
+		<div>
+			<h1><center><em><font face="Impact" size=54px>WHAT SHOULD I READ NEXT?</font></em></center></h1>
+		</div>
+
+		<!-- buttons to get info from book API -->
+		<div align="center">
+			<button onclick="dispBook()" id="button1">PICK A BOOK</button>
+		</div>
+
+		<!-- button to get info from top stories API -->
+		<div align="center">
+			<button onclick="dispTop()" id="button2">PICK A STORY</button>
+		</div>
+
+		<!-- information from API for book and story selection display -->
+		<div align="center" position="absolute">
+
+			<font face="Palatino">
+
+			<h1 id="a" align="center"></h1>
+			<h1 id="b" align="center"></h1>
+			<h2 id="c" align="center"></h2>
+			<h3 id="d" align="center"></h3>
+			<h3 id="e" align="center"></h3>
+			<br>
+			</font>
+
+			<div align="center">
+				<img id="picture" height="40%" width="40%"></img>
+			</div>
+
+			<br>
+			<br>
+		</div>
+	</body>
+</html>
